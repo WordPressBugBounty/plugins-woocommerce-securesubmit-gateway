@@ -38,7 +38,6 @@ class HpsSoapGatewayService extends HpsGatewayServiceAbstract implements HpsGate
         if ($this->_config->developerId != null && $this->_config->developerId != "") {
             $hpsHeader->appendChild($xml->createElement('hps:DeveloperID', $this->_config->developerId));
             $hpsHeader->appendChild($xml->createElement('hps:VersionNbr', $this->_config->versionNumber));
-            $hpsHeader->appendChild($xml->createElement('hps:SiteTrace', $this->_config->siteTrace));
         }
         if (isset($options['clientTransactionId'])) {
             $hpsHeader->appendChild($xml->createElement('hps:ClientTxnId', $options['clientTransactionId']));
@@ -55,10 +54,10 @@ class HpsSoapGatewayService extends HpsGatewayServiceAbstract implements HpsGate
 
         $url = $this->_gatewayUrlForKey();
         $header = array(
-            'Content-type: text/xml;charset="utf-8"',
-            'Accept: text/xml',
-            'SOAPAction: ""',
-            'Content-length: '.strlen($xml->saveXML()),
+            'Content-Type' => 'text/xml;charset="utf-8"',
+            'Accept' => 'text/xml',
+            'SOAPAction' => "",
+            'Content-length' => strlen($xml->saveXML()),
         );
         $data = $xml->saveXML();
         // print "\n" . $data;
@@ -84,7 +83,7 @@ class HpsSoapGatewayService extends HpsGatewayServiceAbstract implements HpsGate
                 break;
             case '500':
                 $faultString = $this->_XMLFault2String($curlResponse);
-                throw new HpsException($faultString);
+                throw new HpsException(esc_html($faultString));
                 break;
             default:
                 throw new HpsException('Unexpected response');
